@@ -5,6 +5,7 @@ import Table from "../components/Table";
 const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("jwt");
 
@@ -26,6 +27,29 @@ const Matches = () => {
 
     fetchMatches();
   }, [token]);
+
+  // Fonction pour créer un match
+  const createMatch = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:3002/matches",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Redirection vers la page du match nouvellement créé
+      window.location.href = `/matches/${response.data._id}`;
+    } catch (err) {
+      setError(err.response?.data?.match || "Impossible de créer le match.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Colonnes pour le tableau
   const columns = [
@@ -54,6 +78,23 @@ const Matches = () => {
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
       <h1>Liste des matchs</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      
+      {/* Bouton pour créer un match */}
+      <button
+        onClick={createMatch}
+        disabled={loading}
+        style={{
+          padding: "10px 15px",
+          backgroundColor: "purple",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          marginBottom: "20px",
+        }}
+      >
+        {loading ? "Création en cours..." : "Créer un match"}
+      </button>
+      
       {!matches.length && !error && <p>Chargement des matchs...</p>}
       {matches.length > 0 && (
         <Table columns={columns} data={matches} onRowClick={handleRowClick} />

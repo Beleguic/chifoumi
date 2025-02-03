@@ -1,9 +1,11 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Matches from "./pages/Matches";
+import Game from "./pages/Game"; // nouvelle page pour le jeu
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
@@ -13,12 +15,23 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        {/* Page Matches protégée */}
+        
+        {/* Route protégée pour la liste des matchs */}
         <Route
           path="/matches"
           element={
             <ProtectedRoute>
               <Matches />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Route protégée pour le jeu, en fonction de l'ID du match */}
+        <Route
+          path="/matches/:matchId"
+          element={
+            <ProtectedRoute>
+              <Game />
             </ProtectedRoute>
           }
         />
