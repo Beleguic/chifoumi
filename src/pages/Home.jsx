@@ -1,10 +1,23 @@
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "./../contexts/AuthContext"; // Importer AuthContext
 
 const Home = () => {
   const navigate = useNavigate();
 
-  // Vérifie si l'utilisateur est connecté via le token dans le localStorage
-  const isAuthenticated = Boolean(localStorage.getItem("jwt"));
+  // Utiliser le AuthContext pour obtenir l'état d'authentification
+  const { user, logout } = useContext(AuthContext);
+
+  // Vérifie si l'utilisateur est authentifié en vérifiant la présence de l'utilisateur dans le contexte
+  const isAuthenticated = Boolean(user);
+
+  const handleLogout = () => {
+    // Utiliser la méthode logout du AuthContext pour déconnecter l'utilisateur
+    logout();
+
+    // Redirige l'utilisateur vers la page de connexion
+    navigate("/login");
+  };
 
   return (
     <div style={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
@@ -14,23 +27,23 @@ const Home = () => {
           <button
             onClick={() => navigate("/register")}
             style={{
-              padding: "10px 15px",
-              backgroundColor: "blue",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
+              	padding: "10px 15px",
+              	backgroundColor: "blue",
+              	color: "white",
+              	border: "none",
+              	cursor: "pointer",
+            }}	
           >
-            S'inscrire
+            S&apos;inscrire
           </button>
           <button
             onClick={() => navigate("/login")}
             style={{
-              padding: "10px 15px",
-              backgroundColor: "gray",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
+              	padding: "10px 15px",
+              	backgroundColor: "gray",
+              	color: "white",
+              	border: "none",
+              	cursor: "pointer",
             }}
           >
             Connexion
@@ -42,14 +55,27 @@ const Home = () => {
           <button
             onClick={() => navigate("/matches")}
             style={{
-              padding: "10px 15px",
-              backgroundColor: "green",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
+              	padding: "10px 15px",
+              	backgroundColor: "green",
+              	color: "white",
+              	border: "none",
+              	cursor: "pointer",
             }}
           >
             Aller aux parties
+          </button>
+          <button
+            onClick={handleLogout}
+            style={{
+              	padding: "10px 15px",
+              	backgroundColor: "red",
+              	color: "white",
+              	border: "none",
+              	cursor: "pointer",
+              	marginLeft: "10px",
+            }}
+          >
+            Déconnexion
           </button>
         </div>
       )}

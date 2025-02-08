@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Form from "./../components/Form";
 
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
+
+console.log(API_URL);
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -17,13 +19,28 @@ const Register = () => {
         username,
         password,
       });
-      console.log(response);
-      alert("Inscription réussie !");
-      navigate("/login");
+      
+      // Vérification du statut de la réponse
+      if (response.status === 201) {
+        console.log(response.data);  // Afficher les données retournées, si nécessaire
+        alert("Inscription réussie !");
+        navigate("/login");
+      } else {
+        // Gérer les autres statuts HTTP si nécessaire
+        alert("Une erreur est survenue, veuillez réessayer.");
+      }
     } catch (err) {
-      alert("Erreur lors de l'inscription. Veuillez réessayer.");
+      // Vérification de l'erreur retournée
+      if (err.response) {
+        // Erreur côté serveur
+        alert(`Erreur: ${err.response.data.message || 'Veuillez réessayer.'}`);
+      } else {
+        // Erreur côté client
+        alert("Erreur réseau ou problème avec l'API. Veuillez réessayer.");
+      }
     }
   };
+  
 
   return (
     <Form

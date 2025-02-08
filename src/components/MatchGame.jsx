@@ -3,7 +3,7 @@ import axios from "axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useParams, useNavigate } from "react-router-dom";
 
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const MatchGame = () => {
   const { matchId } = useParams();
@@ -210,10 +210,10 @@ const MatchGame = () => {
                   : "Vous avez perdu le match."}
               </p>
             ) : !turnFinished && playerMove === null ? (
-              <p style={{ fontSize: "1.2em", color: "green" }}>C'est à vous de jouer</p>
+              <p style={{ fontSize: "1.2em", color: "green" }}>C&apos;est à vous de jouer</p>
             ) : !turnFinished && playerMove !== null ? (
               <p style={{ fontSize: "1.2em", color: "orange" }}>
-                Vous avez joué : {playerMove}. En attente de l'autre joueur...
+                Vous avez joué : {playerMove}. En attente de l&apos;autre joueur...
               </p>
             ) : (
               turnFinished && (
@@ -224,7 +224,7 @@ const MatchGame = () => {
             )}
             {opponentMove && !turnFinished && !matchEnded && (
               <p style={{ fontSize: "1.2em", color: "blue" }}>
-                L'adversaire a joué : {opponentMove}
+                L&apos;adversaire a joué : {opponentMove}
               </p>
             )}
           </div>

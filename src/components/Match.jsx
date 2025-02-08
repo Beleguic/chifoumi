@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import EventSourcePolyfill from "event-source-polyfill";
 
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 const Match = ({ matchId: initialMatchId }) => {
