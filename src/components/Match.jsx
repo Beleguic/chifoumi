@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import EventSourcePolyfill from "event-source-polyfill";
+
+const API_URL = import.meta.env.API_URL;
+
 
 const Match = ({ matchId: initialMatchId }) => {
   const [match, setMatch] = useState(null); // Données du match
@@ -16,7 +19,7 @@ const Match = ({ matchId: initialMatchId }) => {
   // Fonction pour récupérer les détails du match
   const fetchMatch = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3002/matches/${id}`, {
+      const response = await axios.get(`${API_URL}/matches/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,7 +44,7 @@ const Match = ({ matchId: initialMatchId }) => {
     if (!matchId) return;
 
     const eventSource = new EventSourcePolyfill(
-      `http://localhost:3002/matches/${matchId}/subscribe`,
+      `${API_URL}/matches/${matchId}/subscribe`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -90,7 +93,7 @@ const Match = ({ matchId: initialMatchId }) => {
       setLoading(true);
       setPlayerMove(move);
       const response = await axios.post(
-        `http://localhost:3002/matches/${matchId}/turns/${turnId}`,
+        `${API_URL}/matches/${matchId}/turns/${turnId}`,
         { move },
         {
           headers: {
@@ -114,7 +117,7 @@ const Match = ({ matchId: initialMatchId }) => {
       setLoading(true);
       // L'appel POST /matches ne requiert pas de body
       const response = await axios.post(
-        `http://localhost:3002/matches`,
+        `${API_URL}/matches`,
         {},
         {
           headers: {

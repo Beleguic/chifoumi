@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Table from "../components/Table";
+
+const API_URL = import.meta.env.API_URL;
 
 const Matches = () => {
   const [matches, setMatches] = useState([]);
@@ -13,7 +15,7 @@ const Matches = () => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await axios.get("http://localhost:3002/matches", {
+        const response = await axios.get(`${API_URL}/matches`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -33,7 +35,7 @@ const Matches = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3002/matches",
+        `${API_URL}/matches`,
         {},
         {
           headers: {

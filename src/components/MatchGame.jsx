@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { useParams, useNavigate } from "react-router-dom";
+
+const API_URL = import.meta.env.API_URL;
 
 const MatchGame = () => {
   const { matchId } = useParams();
@@ -23,7 +25,7 @@ const MatchGame = () => {
   // Fonction de récupération du match
   const fetchMatch = async () => {
     try {
-      const response = await axios.get(`http://localhost:3002/matches/${matchId}`, {
+      const response = await axios.get(`${API_URL}/${matchId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMatch(response.data);
@@ -44,7 +46,7 @@ const MatchGame = () => {
   useEffect(() => {
     if (!matchId) return;
     const eventSource = new EventSourcePolyfill(
-      `http://localhost:3002/matches/${matchId}/subscribe`,
+      `${API_URL}/${matchId}/subscribe`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -107,7 +109,7 @@ const MatchGame = () => {
       setPlayerMove(move);
       setError(null);
       await axios.post(
-        `http://localhost:3002/matches/${matchId}/turns/${turnId}`,
+        `${API_URL}/${matchId}/turns/${turnId}`,
         { move },
         { headers: { Authorization: `Bearer ${token}` } }
       );
