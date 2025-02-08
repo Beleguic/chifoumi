@@ -25,7 +25,7 @@ const MatchGame = () => {
   // Fonction de récupération du match
   const fetchMatch = async () => {
     try {
-      const response = await axios.get(`${API_URL}/${matchId}`, {
+      const response = await axios.get(`${API_URL}/matches/${matchId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMatch(response.data);
@@ -46,7 +46,7 @@ const MatchGame = () => {
   useEffect(() => {
     if (!matchId) return;
     const eventSource = new EventSourcePolyfill(
-      `${API_URL}/${matchId}/subscribe`,
+      `${API_URL}/matches/${matchId}/subscribe`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -109,7 +109,7 @@ const MatchGame = () => {
       setPlayerMove(move);
       setError(null);
       await axios.post(
-        `${API_URL}/${matchId}/turns/${turnId}`,
+        `${API_URL}/matches/${matchId}/turns/${turnId}`,
         { move },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -153,7 +153,6 @@ const MatchGame = () => {
     if (winner === "draw") {
       return "Égalité";
     }
-    // Si le serveur renvoie "user1" ou "user2", on détermine le rôle du joueur courant
     if (winner === "user1") {
       return match?.user1?.username === currentUser
         ? "Vous avez gagné ce tour !"
@@ -236,7 +235,6 @@ const MatchGame = () => {
               marginBottom: "20px",
             }}
           >
-            {/* Afficher les boutons de coup seulement si le tour n'est pas terminé et le match n'est pas fini */}
             {!turnFinished && !matchEnded && (
               <>
                 <button
@@ -286,7 +284,6 @@ const MatchGame = () => {
                 </button>
               </>
             )}
-            {/* Bouton pour passer au tour suivant lorsque le tour est terminé */}
             {turnFinished && !matchEnded && (
               <button
                 onClick={nextTurn}
@@ -303,7 +300,6 @@ const MatchGame = () => {
                 Passer au tour suivant
               </button>
             )}
-            {/* Bouton pour quitter le match lorsque celui-ci est terminé */}
             {matchEnded && (
               <button
                 onClick={quitMatch}

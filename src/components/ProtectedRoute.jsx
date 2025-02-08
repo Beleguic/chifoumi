@@ -6,7 +6,7 @@ import AuthContext from "./../contexts/AuthContext"; // Assure-toi que le chemin
 const ProtectedRoute = ({ children }) => {
   // Utilisation du contexte pour récupérer l'état d'authentification
   const { user } = useContext(AuthContext); // 'user' contient les infos sur l'utilisateur connecté
-
+  console.log(user);
   // Si l'utilisateur n'est pas authentifié (c'est-à-dire pas de 'user' dans le contexte), redirige vers la page de login
   if (!user) {
     return <Navigate to="/login" />;
