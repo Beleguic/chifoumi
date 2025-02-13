@@ -1,6 +1,6 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext"; // Importer AuthProvider
+import { AuthContext } from "./contexts/AuthContext"; // Importer AuthProvider
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -10,7 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
-    <AuthProvider> {/* Envelopper l'ensemble de l'application avec AuthProvider */}
+    <AuthContext> {/* Envelopper l'ensemble de l'application avec AuthProvider */}
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -29,7 +29,7 @@ const App = () => {
 
           {/* Route protégée pour le jeu, en fonction de l'ID du match */}
           <Route
-            path="/matches/:matchId"
+            path="/game/:matchId"
             element={
               <ProtectedRoute>
                 <Game />
@@ -38,7 +38,7 @@ const App = () => {
           />
         </Routes>
       </Router>
-    </AuthProvider>
+    </AuthContext>
   );
 };
 

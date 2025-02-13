@@ -1,71 +1,41 @@
-import { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
-import PropTypes from 'prop-types'; // Importer PropTypes
+import { createContext, useContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const AuthContext = createContext();
+const UserContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+export const UserProvider = ({ children }) => {
+  const [authId, setAuthId] = useState(() => localStorage.getItem("AuthId"));
 
-  // Vérifie si le token est présent dans le localStorage et si le token est valide
-  useEffect(() => {
-
-    const validateToken = async (token) => {
-        try {
-          // Ajouter le token à l'en-tête Authorization
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/matches`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.status === 200) {
-            setUser({ token });
-          } else {
-            logout();
-          }
-        } catch (error) {
-          console.error("Token invalide ou expiré", error);
-          logout();
-        } finally {
-          setLoading(false);
-        }
-      };
-
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      validateToken(token);
+  const updateUser = (id) => {
+    if (id) {
+      localStorage.setItem("AuthId", id);
     } else {
-      setLoading(false);
+      localStorage.removeItem("AuthId");
     }
+    setAuthId(id);
+  };
+
+  useEffect(() => {
+    const syncUserId = () => setAuthId(localStorage.getItem("AuthId"));
+    window.addEventListener("storage", syncUserId);
+    return () => window.removeEventListener("storage", syncUserId);
   }, []);
 
-  // Fonction pour vérifier la validité du token côté serveur
-  
-
-  // Fonction pour se connecter
-  const login = (token) => {
-    localStorage.setItem('jwt', token);
-    setUser({ token });
-  };
-
-  // Fonction pour se déconnecter
-  const logout = () => {
-    localStorage.removeItem('jwt');
-    setUser(null);
-  };
-
-  // Fournir le contexte aux composants enfants
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <UserContext.Provider value={{ authId, updateUser, clearUser: () => updateUser(null) }}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };
 
-// Ajouter la validation des props
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired, // On attend un ou plusieurs éléments React comme children
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
-export default AuthContext;
+export const AuthContext = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};

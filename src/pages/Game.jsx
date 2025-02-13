@@ -1,8 +1,7 @@
-// src/pages/Game.jsx
-import MatchGame from "../components/MatchGame";
+//import { AuthContext } from "../contexts/AuthContext";
 
-const Game = () => {
-  return <MatchGame />;
-};
+const API_URL = import.meta.env.VITE_API_URL;
 
-export default Game;
+console.log(API_URL);
+
+export default API_URL;
