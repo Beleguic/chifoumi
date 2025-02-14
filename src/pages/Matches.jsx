@@ -56,19 +56,19 @@ export default function MatchList() {
 
   return (
     <div>
-      	<div className="flex items-center justify-between mb-4">
-        	<h1 className="text-2xl">Liste des matchs</h1>
-			<button onClick={() => createMatch()} className="px-4 py-2 text-white bg-blue-500 rounded">
+      	<div className="flex items-center justify-center flex-col mb-4">
+        	<h1 className="text-2xl text-center m-6">Liste des matchs</h1>
+			<button onClick={() => createMatch()} className="px-4 py-2 text-white bg-blue-500 rounded cursor-pointer transition hover:brightness-110">
           		+ Créer une partie
         	</button>
-			{errorCreate && <p>{errorCreate}</p>}
+			{errorCreate && <p className="text-red-500 m-1">{errorCreate}</p>}
       	</div>
 
-      	<h2 className="mb-2 text-lg">Vos matchs</h2>
-      	<table className="w-full mb-4 bg-white rounded shadow table-auto">
+      	<h2 className="mb-2 text-2xl text-center">Vos matchs</h2>
+      	<table className="w-4/5 m-auto mb-4 bg-white rounded shadow table-auto">
         	<thead>
           		<tr className="bg-gray-200">
-            		<th className="p-2">ID</th>
+            		<th className="p-2">ID du match</th>
             		<th className="p-2">Joueur 1</th>
             		<th className="p-2">Joueur 2</th>
             		<th className="p-2">Statut du match</th>
@@ -95,14 +95,14 @@ export default function MatchList() {
 				
             	return (
               		<tr key={match._id}>
-                	<td className="p-2">{match._id}</td>
-                	<td className="p-2">{match.user1?.username || "En attente"}</td>
-                	<td className="p-2">{match.user2?.username || "En attente"}</td>
-                	<td className="p-2">{winnerLabel}</td>
-                	<td className="p-2">
+                	<td className="p-2 text-center">{match._id}</td>
+                	<td className="p-2 text-center">{match.user1?.username || "En attente"}</td>
+                	<td className="p-2 text-center">{match.user2?.username || "En attente"}</td>
+                	<td className="p-2 text-center">{winnerLabel}</td>
+                	<td className="p-2 text-center">
                 	  <button
                 	    onClick={() => navigate(`/game/${match._id}`)}
-                	    className="px-4 py-2 text-white bg-green-500 rounded"
+                	    className="px-4 py-2 text-white bg-green-500 rounded cursor-pointer transition hover:brightness-110"
                 	  >
                 	    Jouer
                 	  </button>
