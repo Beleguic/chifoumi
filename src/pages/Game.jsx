@@ -15,22 +15,44 @@ export default function MatchGame() {
   const [turn, setTurn] = useState(1);
   const [error, setError] = useState("");
 
-  const fetchMatch = useCallback(async () => {
-    try {
-      setError(null);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_URL}/matches/${matchId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+	const fetchMatch = useCallback(async () => {
+		try {
+			setError(null);
+			const token = localStorage.getItem("token");
+			const response = await axios.get(`${API_URL}/matches/${matchId}`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
 
-      setMatch(response.data);
-      setTurn(response.data.turns.length + 1);
-      console.log("Match data fetched:", response.data);
-    } catch (err) {
-      console.error("Erreur lors de la récupération du match :", err);
-      setError("Impossible de charger le match.");
-    }
-  }, [matchId]);
+			setMatch(response.data);
+			let newTurn = getNextTurnId(response.data);
+			console.log(newTurn);
+			setTurn(newTurn);
+			console.log("Match data fetched:", response.data);
+		} catch (err) {
+			console.error("Erreur lors de la récupération du match :", err);
+			setError("Impossible de charger le match.");
+		}
+	}, [matchId]);
+
+	function isTurnFullyPlayed(turn) {
+		return !!(turn.user1 && turn.user2);
+	}
+		
+	function getNextTurnId(match) {
+		const nbTurns = match.turns.length;
+		if (nbTurns === 0) {
+			return 1;
+		}
+		const lastTurn = match.turns[nbTurns - 1];
+		if (!isTurnFullyPlayed(lastTurn)) {
+			return nbTurns;
+		}
+		if (nbTurns < 3) {
+			return nbTurns + 1;
+		}
+		return 3;
+	}
+  
 
   const subscribeToMatch = useCallback(
     (matchId) => {
@@ -140,6 +162,9 @@ export default function MatchGame() {
       </p>
     );
   }
+
+  const isUser1 = match.user1?._id === authId;
+  const isUser2 = match.user2?._id === authId;
 
   return (
     <div>
