@@ -65,32 +65,29 @@ const Login = () => {
   
 	return (
 		<>
+		<div>
 		<Form
 			title="Connexion"
 			fields={[
-				{ label: "Nom d'utilisateur", type: "text", value: username, onChange: (e) => setUsername(e.target.value), required: true },
-				{ label: "Mot de passe", type: "password", value: password, onChange: (e) => setPassword(e.target.value), required: true },
+				{ name: "username", label: "Nom d'utilisateur", type: "text", value: username, onChange: (e) => setUsername(e.target.value), required: true },
+				{ name: "password", label: "Mot de passe", type: "password", value: password, onChange: (e) => setPassword(e.target.value), required: true },
 			]}
 			onSubmit={handleSubmit}
 			submitLabel="Se connecter"
+			className="form"
 			otherAction={
 			<button
 				type="button"
 				onClick={() => navigate("/register")}
-				style={{
-				padding: "10px 15px",
-				backgroundColor: "gray",
-				color: "white",
-				border: "none",
-				borderRadius: "4px",
-				cursor: "pointer",
-				}}
 			>
 				S&apos;inscrire
 			</button>
 			}
 		/>
-		{error && <p>{error}</p>}
+			<div>
+			{error && <p>{error}</p>}
+			</div>
+		</div>
 		</>
 	);
   };
