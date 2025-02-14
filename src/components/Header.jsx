@@ -2,14 +2,18 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 const Header = () => {
-  const navigate = useNavigate(); // Hook pour naviguer
-  const { authId, clearUser } = useAuth(); // ✅ Déplacé ici
+  const navigate = useNavigate();
+  const { authId, clearUser, username } = useAuth();
+
+  console.log(username);
 
   const isAuthenticated = Boolean(authId);
 
+  console.log(authId);
+
   const handleLogout = () => {
-    clearUser(); // ✅ Déconnexion
-    navigate("/login"); // ✅ Redirection
+    clearUser();
+    navigate("/login");
   };
 
   return (
@@ -18,7 +22,7 @@ const Header = () => {
             <img src="/public/ratp.png" alt="Logo Chifoumi" />
         </div>
         <div style={{ width: "60%", textAlign: "center" }}>
-            <h1 onClick={() => navigate("/matches")} className='logo'>Chifoumi</h1>
+            <h1 onClick={() => navigate("/matches")} className='logo'>Chifoumi - Bienvenue { username }</h1>
         </div>
         <div style={{ width: "20%", justifyContent: "right" }}>
             <nav>

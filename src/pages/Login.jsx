@@ -15,53 +15,51 @@ const Login = () => {
 	
   
 	const handleSubmit = async (e) => {
-	  	e.preventDefault();
-	  	try {
-			const response = await axios.post(`${API_URL}/login`, {
-		  		username,
-		  		password,
-			});
-  
-			// Vérification du statut de la réponse
-			if (response.status === 200 && response.data.token) {
-		  		const { token } = response.data;
-
-		  		localStorage.setItem("token", token);
-
-		  		const AuthId = extractPayloadFromToken(token);
-				if(!AuthId){
-					setError("Une erreur s'est produite lors de l'identification de l'utilisateur");
-				}
-				else{
-					localStorage.setItem("AuthId", AuthId);
-					updateUser(AuthId);
-					navigate("/matches");
-				}
-		
-			} else {
-				setError("Erreur de connexion. Veuillez vérifier vos identifiants.");
-			}
-	  	} catch (err) {
-			// Vérification de l'erreur retournée
-			if (err.response) {
-		  		// Erreur côté serveur
-		  		setError(`Erreur: ${err.response.data.message || 'Vérifiez vos identifiants et réessayez.'}`);
-			} else {
-		  		// Erreur côté client
-		  		setError("Erreur réseau ou problème avec l'API. Veuillez réessayer.");
-			}
-	  	}
-	};
-
-	const extractPayloadFromToken = (token) => {
+		e.preventDefault();
 		try {
-			const decodedToken = JSON.parse(atob(token.split(".")[1]));
-			return decodedToken && decodedToken._id ? decodedToken._id : null;
-		} catch (error) {
-			console.error("Erreur lors de l'extraction de l'userId :", error);
-			return null;
+		  const response = await axios.post(`${API_URL}/login`, {
+			username,
+			password,
+		  });
+	  
+		  if (response.status === 200 && response.data.token) {
+			const { token } = response.data;
+			localStorage.setItem("token", token);
+	  
+			const { authId, name } = extractPayloadFromToken(token);
+			if (!authId || !name) {
+			  setError("Une erreur s'est produite lors de l'identification de l'utilisateur");
+			} else {
+			  localStorage.setItem("AuthId", authId);
+			  localStorage.setItem("Username", name);
+			  updateUser(authId, name);
+			  navigate("/matches");
+			}
+		  } else {
+			setError("Erreur de connexion. Veuillez vérifier vos identifiants.");
+		  }
+		} catch (err) {
+		  if (err.response) {
+			setError(`Erreur: ${err.response.data.message || 'Vérifiez vos identifiants et réessayez.'}`);
+		  } else {
+			setError("Erreur réseau ou problème avec l'API. Veuillez réessayer.");
+		  }
 		}
 	};
+	  
+	const extractPayloadFromToken = (token) => {
+		try {
+		  const decodedToken = JSON.parse(atob(token.split(".")[1]));
+		  return {
+			authId: decodedToken?._id || null,
+			name: decodedToken?.username || null
+		  };
+		} catch (error) {
+		  	console.error("Erreur lors de l'extraction des informations utilisateur :", error);
+		  	return { authId: null, name: null };
+		}
+	};
+	  
   
 	return (
 		<>
