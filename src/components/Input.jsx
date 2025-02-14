@@ -2,7 +2,7 @@ import React from "react";
 
 const Input = ({ label, type, value, onChange, required = false, placeholder }) => {
   return (
-    <div style={{ marginBottom: "10px" }}>
+    <div className="inputContainer">
       <label>{label}</label>
       <input
         type={type}
@@ -10,13 +10,6 @@ const Input = ({ label, type, value, onChange, required = false, placeholder }) 
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        style={{
-          width: "100%",
-          padding: "8px",
-          marginTop: "5px",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-        }}
       />
     </div>
   );
