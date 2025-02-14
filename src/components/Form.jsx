@@ -1,11 +1,11 @@
 import React from "react";
 import Input from "./Input";
 
-const Form = ({ title, fields, onSubmit, submitLabel, otherAction }) => {
+const Form = ({ title, fields, onSubmit, submitLabel, className, otherAction }) => {
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
+    <div className="formContainer">
       <h2>{title}</h2>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className={className}>
         {fields.map((field) => (
           <Input
             key={field.name}
@@ -17,17 +17,9 @@ const Form = ({ title, fields, onSubmit, submitLabel, otherAction }) => {
             placeholder={field.placeholder}
           />
         ))}
-        <div style={{ marginTop: "10px", display: "flex", justifyContent: "space-between" }}>
+        <div className="buttonContainer">
           <button
             type="submit"
-            style={{
-              padding: "10px 15px",
-              backgroundColor: "blue",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
           >
             {submitLabel}
           </button>

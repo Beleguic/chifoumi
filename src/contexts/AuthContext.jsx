@@ -5,24 +5,31 @@ const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [authId, setAuthId] = useState(() => localStorage.getItem("AuthId"));
+  const [username, setUsername] = useState(() => localStorage.getItem("Username"));
 
-  const updateUser = (id) => {
+  const updateUser = (id, name) => {
     if (id) {
       localStorage.setItem("AuthId", id);
+      localStorage.setItem("Username", name);
     } else {
       localStorage.removeItem("AuthId");
+      localStorage.removeItem("Username");
     }
     setAuthId(id);
+    setUsername(name);
   };
 
   useEffect(() => {
-    const syncUserId = () => setAuthId(localStorage.getItem("AuthId"));
-    window.addEventListener("storage", syncUserId);
-    return () => window.removeEventListener("storage", syncUserId);
+    const syncUser = () => {
+      setAuthId(localStorage.getItem("AuthId"));
+      setUsername(localStorage.getItem("Username"));
+    };
+    window.addEventListener("storage", syncUser);
+    return () => window.removeEventListener("storage", syncUser);
   }, []);
 
   return (
-    <UserContext.Provider value={{ authId, updateUser, clearUser: () => updateUser(null) }}>
+    <UserContext.Provider value={{ authId, username, updateUser, clearUser: () => updateUser(null, null) }}>
       {children}
     </UserContext.Provider>
   );
@@ -39,4 +46,3 @@ export const useAuth = () => {
   }
   return context;
 };
-  

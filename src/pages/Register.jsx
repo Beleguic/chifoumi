@@ -43,6 +43,7 @@ const Register = () => {
 
   return (
     <>
+    <div>
       <Form
         title="Inscription"
         fields={[
@@ -51,24 +52,21 @@ const Register = () => {
         ]}
         onSubmit={handleSubmit}
         submitLabel="S'inscrire"
+        className="form"
         otherAction={
           <button
             type="button"
             onClick={() => navigate("/login")}
-            style={{
-              padding: "10px 15px",
-              backgroundColor: "gray",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
           >
             Se connecter
           </button>
         }
       />
-      {error && <p>{error}</p>}
+        <div>
+          {error && <p>{error}</p>}
+        </div>
+      
+      </div>
     </>
   );
 };
