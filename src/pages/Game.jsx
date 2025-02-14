@@ -1,8 +1,9 @@
 import { useAuth } from "../contexts/AuthContext";
-import { useEffect, useState, useCallback } from "react";
+import {useEffect, useState, useCallback, useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
+import {gameState} from "../data/data.js";
 
 export default function MatchGame() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -14,6 +15,10 @@ export default function MatchGame() {
   const [match, setMatch] = useState(null);
   const [turn, setTurn] = useState(1);
   const [error, setError] = useState("");
+  const [moveDisabled, setMoveDisabled] = useState(false);
+  const [winner, setWinner] = useState(null);
+
+  const userNumber = useRef(1)
 
 	const fetchMatch = useCallback(async () => {
 		try {
@@ -24,10 +29,11 @@ export default function MatchGame() {
 			});
 
 			setMatch(response.data);
+      console.log("match data set : ", response.data);
+      userNumber.current = response.data.user1._id === authId ? 1 : 2;
 			let newTurn = getNextTurnId(response.data);
 			console.log(newTurn);
 			setTurn(newTurn);
-			console.log("Match data fetched:", response.data);
 		} catch (err) {
 			console.error("Erreur lors de la récupération du match :", err);
 			setError("Impossible de charger le match.");
@@ -45,15 +51,62 @@ export default function MatchGame() {
 		}
 		const lastTurn = match.turns[nbTurns - 1];
 		if (!isTurnFullyPlayed(lastTurn)) {
+      if(Object.keys(lastTurn).includes(`user${userNumber.current}`))
+        setMoveDisabled(true);
+      else
+        setMoveDisabled(false);
 			return nbTurns;
 		}
-		if (nbTurns < 3) {
+    setMoveDisabled(false);
+    console.log("turn fully played : ", moveDisabled);
+    if (nbTurns < 3) {
 			return nbTurns + 1;
 		}
+    console.log("game ended");
+    setWinner(getWinner(match));
+    setMoveDisabled(true);
 		return 3;
 	}
-  
 
+  const getWinner = (match) => {
+    const user1WinCount = match.turns.filter((turn) => turn.winner === match.user1._id).length;
+    const user2WinCount = match.turns.filter((turn) => turn.winner === match.user2._id).length;
+
+    return user1WinCount > user2WinCount ? match.user1.username : user2WinCount > user1WinCount ? match.user2.username : "draw";
+  }
+
+  function Winner() {
+    if(!winner)
+      return (
+        <div>
+          <h1>Match en cours</h1>
+        </div>
+      )
+    if(winner === gameState.DRAW)
+      return (
+        <div>
+          <h1>Match terminé</h1>
+          <h2>Match nul</h2>
+        </div>
+      )
+    return (
+      <div>
+        <h1>Match terminé</h1>
+        <h2>Le vainqueur est {winner}</h2>
+      </div>
+    );
+  }
+
+  function Buttons() {
+    if(!winner)
+      return (
+        <nav>
+          <button onClick={() => submitMove(getTransportEquivalent("RER"))} disabled={ moveDisabled }>RER</button>
+          <button onClick={() => submitMove(getTransportEquivalent("Metro"))} disabled={ moveDisabled }>Metro</button>
+          <button onClick={() => submitMove(getTransportEquivalent("Tram"))} disabled={ moveDisabled }>Tram</button>
+        </nav>
+      )
+  }
   const subscribeToMatch = useCallback(
     (matchId) => {
       const token = localStorage.getItem("token");
@@ -94,7 +147,7 @@ export default function MatchGame() {
       Object.entries(equivalents).map(([key, value]) => [value, key])
     );
 
-    return reverseEquivalents[choice] || "Inconnu";
+    return equivalents.hasOwnProperty(choice) ? equivalents[choice] : reverseEquivalents[choice] || "Inconnu";
   };
 
   const submitMove = async (move) => {
@@ -110,18 +163,18 @@ export default function MatchGame() {
 
       if (response.status === 202) {
         console.log("Coup envoyé avec succès !");
-        fetchMatch(); // Met à jour les données du match après le coup joué
+        setMoveDisabled(true);
       }
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
-        if (data.turn === "not found") {
+        if (data.turn === gameState.NOT_FOUND) {
           setError("Tour non trouvé.");
-        } else if (data.turn === "not last") {
+        } else if (data.turn === gameState.NOT_LAST) {
           setError("Le tour est déjà terminé.");
-        } else if (data.match === "Match already finished") {
+        } else if (data.match === gameState.ENDED) {
           setError("Le match est déjà terminé.");
-        } else if (data.user === "move already given") {
+        } else if (data.user === gameState.ALREADY_MOVED) {
           setError("Vous avez déjà joué ce tour.");
         } else {
           setError("Une erreur inconnue s'est produite.");
@@ -163,14 +216,36 @@ export default function MatchGame() {
     );
   }
 
-  const isUser1 = match.user1?._id === authId;
-  const isUser2 = match.user2?._id === authId;
-
   return (
-    <div>
-      <button onClick={() => submitMove(getTransportEquivalent("RER"))}>RER</button>
-      <button onClick={() => submitMove(getTransportEquivalent("Metro"))}>Metro</button>
-      <button onClick={() => submitMove(getTransportEquivalent("Tram"))}>Tram</button>
-    </div>
+    <>
+      <Winner></Winner>
+      <div className="flex flex-col items-center">
+        <div>
+          <h2> Vous êtes le joueur { userNumber.current === 1 ? '1 : ' + match.user1.username : '2 : ' + match.user2.username }</h2>
+          <h3> Tour n°{turn}</h3>
+          <Buttons></Buttons>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Turn</th>
+            <th>Joueur 1</th>
+            <th>Joueur 2</th>
+            <th>Winner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {match.turns.map((turn, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{getTransportEquivalent(turn.user1) || "En attente"}</td>
+              <td>{getTransportEquivalent(turn.user2) || "En attente"}</td>
+              <td>{turn.winner === gameState.DRAW ? "Égalité" : match[turn.winner]?.username || "En attente"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }

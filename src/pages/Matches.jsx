@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Table from "../components/Table";
 import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -23,7 +22,7 @@ export default function MatchList() {
       setMatches(matchesResponse.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des données :", error);
-	  setError("Erreur lors de la récupération des matches");
+	  	setError("Erreur lors de la récupération des matches");
     }
   };
 
@@ -45,7 +44,7 @@ export default function MatchList() {
       	);
   
       	if (response.status === 201) {
-				fetchMatches();
+					fetchMatches();
       		} else {
         		setErrorCreate(response.data.match || "Erreur inconnue");
       		}
