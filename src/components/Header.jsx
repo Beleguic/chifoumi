@@ -22,7 +22,7 @@ const Header = () => {
             <img src="/public/ratp.png" alt="Logo Chifoumi" />
         </div>
         <div style={{ width: "60%", textAlign: "center" }}>
-            <h1 onClick={() => navigate("/matches")} className='logo'>Chifoumi - Bienvenue { username }</h1>
+            <h1 onClick={() => navigate("/matches")} className='logo'>Chifoumi {username && `- Bienvenue ${username}`}</h1>
         </div>
         <div style={{ width: "20%", justifyContent: "right" }}>
             <nav>
