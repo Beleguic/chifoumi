@@ -1,6 +1,6 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthContext } from "./contexts/AuthContext"; // Importer AuthProvider
+import { UserProvider } from "./contexts/AuthContext"; // Importer AuthProvider
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -10,7 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
-    <AuthContext> {/* Envelopper l'ensemble de l'application avec AuthProvider */}
+    <UserProvider> {/* Envelopper l'ensemble de l'application avec AuthProvider */}
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -38,7 +38,7 @@ const App = () => {
           />
         </Routes>
       </Router>
-    </AuthContext>
+    </UserProvider>
   );
 };
 

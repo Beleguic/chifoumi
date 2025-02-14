@@ -1,9 +1,9 @@
 import { Navigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+import { useAuth  } from "../contexts/AuthContext";
 import PropTypes from "prop-types"; 
 
 const ProtectedRoute = ({ children }) => {
-  const { authId } = AuthContext(); // Récupère l'userId depuis le contexte
+  const { authId } = useAuth(); // Récupère l'userId depuis le contexte
 
   console.log("User ID:", authId);
 

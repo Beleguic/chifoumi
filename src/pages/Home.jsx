@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext"; // ✅ Import de AuthContext
+import { useAuth  } from "../contexts/AuthContext"; // ✅ Import de AuthContext
 
 const Home = () => {
   const navigate = useNavigate();
-  const { authId, clearUser } = AuthContext(); // ✅ Utilisation de AuthContext()
+  const { authId, clearUser } = useAuth(); // ✅ Utilisation de AuthContext()
 
   const isAuthenticated = Boolean(authId); // ✅ Vérification de connexion
 

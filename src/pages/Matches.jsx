@@ -66,21 +66,34 @@ export default function MatchList() {
       	</div>
 
       	<h2 className="mb-2 text-lg">Vos matchs</h2>
-	  	{error ? (<p>{error}</p>) : 
       	<table className="w-full mb-4 bg-white rounded shadow table-auto">
         	<thead>
           		<tr className="bg-gray-200">
             		<th className="p-2">ID</th>
             		<th className="p-2">Joueur 1</th>
             		<th className="p-2">Joueur 2</th>
-            		<th className="p-2">Gagnant</th>
+            		<th className="p-2">Statut du match</th>
             		<th className="p-2">Action</th>
           		</tr>
         	</thead>
         	<tbody>
           	{matches.map((match) => {
-            	const allTurnsPlayed = match.turns?.length === 3 && match.turns.every((t) => t.user1 && t.user2);
-            	const winnerLabel = match.winner ? match.winner.username : allTurnsPlayed ? "Égalité" : "En cours";
+            	let allTurnsPlayed = false;
+				if (match.turns && match.turns.length === 3) {
+				  allTurnsPlayed = match.turns.every((t) => t.user1 && t.user2);
+				}
+				
+				let winnerLabel;
+				if (match.winner) {
+				  winnerLabel = match.winner.username;
+				} else {
+				  if (allTurnsPlayed) {
+					winnerLabel = "Égalité";
+				  } else {
+					winnerLabel = "En cours";
+				  }
+				}
+				
             	return (
               		<tr key={match._id}>
                 	<td className="p-2">{match._id}</td>
@@ -100,7 +113,6 @@ export default function MatchList() {
           	})}
         	</tbody>
       	</table>
-		}
     </div>
   );
 }
