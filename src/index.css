@@ -11,7 +11,7 @@ a:hover {
 
 @font-face {
 	font-family: "Parisine";
-	src: url("/fonts/Parisine_Regular/Parisine.otf") format("opentype");
+	src: url("/fonts/Parisine_Regular/Parisine_Regular.otf") format("opentype");
 	font-weight: normal;
 	font-style: normal;
   }

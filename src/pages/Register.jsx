@@ -47,8 +47,8 @@ const Register = () => {
       <Form
         title="Inscription"
         fields={[
-          { label: "Nom d'utilisateur", type: "text", value: username, onChange: (e) => setUsername(e.target.value), required: true },
-          { label: "Mot de passe", type: "password", value: password, onChange: (e) => setPassword(e.target.value), required: true },
+          { name:"username", label: "Nom d'utilisateur", type: "text", value: username, onChange: (e) => setUsername(e.target.value), required: true },
+          { name:"password", label: "Mot de passe", type: "password", value: password, onChange: (e) => setPassword(e.target.value), required: true },
         ]}
         onSubmit={handleSubmit}
         submitLabel="S'inscrire"

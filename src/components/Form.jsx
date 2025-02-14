@@ -4,7 +4,7 @@ import Input from "./Input";
 const Form = ({ title, fields, onSubmit, submitLabel, className, otherAction }) => {
   return (
     <div className="formContainer">
-      <h2>{title}</h2>
+      <h2 className="text-xl font-bold">{title}</h2>
       <form onSubmit={onSubmit} className={className}>
         {fields.map((field) => (
           <Input
