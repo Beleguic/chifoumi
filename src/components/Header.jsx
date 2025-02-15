@@ -17,7 +17,7 @@ const Header = () => {
   };
 
   return (
-    <header>
+    <header className={"mainHeader"}>
         <div style={{ width: "20%" }}>
             <img src="/public/ratp.png" alt="Logo Chifoumi" />
         </div>
