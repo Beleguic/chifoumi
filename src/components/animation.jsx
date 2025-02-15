@@ -49,17 +49,17 @@ export default function Animation({ match, turn }) {
 			<h2 className="text-center text-lg font-bold">Joueur 1</h2>
 			<div className="flex relative h-20 overflow-hidden">
 				<div className="absolute trainLeft container flex justify-end" style={trainStylesJ1.Metro}>
-				<img src="/public/Metro.png" alt="Metro - MP89" className="imgTrain" />
+				<img src="/Metro.png" alt="Metro - MP89" className="imgTrain" />
 				</div>
 			</div>
 			<div className="flex relative h-20 overflow-hidden">
 				<div className="absolute trainLeft container flex justify-end" style={trainStylesJ1.RER}>
-				<img src="/public/RER.png" alt="RER - MI09" className="imgTrain" />
+				<img src="/RER.png" alt="RER - MI09" className="imgTrain" />
 				</div>
 			</div>
 			<div className="flex relative h-20 overflow-hidden">
 				<div className="absolute trainLeft container flex justify-end" style={trainStylesJ1.Tram}>
-				<img src="/public/Tram.png" alt="Tram - TW07" className="imgTrain" />
+				<img src="/Tram.png" alt="Tram - TW07" className="imgTrain" />
 				</div>
 			</div>
 			</div>
@@ -69,17 +69,17 @@ export default function Animation({ match, turn }) {
 			<h2 className="text-center text-lg font-bold">Joueur 2</h2>
 			<div className="flex relative h-20 overflow-hidden">
 				<div className="absolute trainRight container flex justify-start" style={trainStylesJ2.Metro}>
-				<img src="/public/Metro.png" alt="Metro - MP89" className="imgTrain" />
+				<img src="/Metro.png" alt="Metro - MP89" className="imgTrain" />
 				</div>
 			</div>
 			<div className="flex relative h-20 overflow-hidden">
 				<div className="absolute trainRight container flex justify-start" style={trainStylesJ2.RER}>
-				<img src="/public/RER.png" alt="RER - MI09" className="imgTrain" />
+				<img src="/RER.png" alt="RER - MI09" className="imgTrain" />
 				</div>
 			</div>
 			<div className="flex relative h-20 overflow-hidden">
 				<div className="absolute trainRight container flex justify-start" style={trainStylesJ2.Tram}>
-				<img src="/public/Tram.png" alt="Tram - TW07" className="imgTrain" />
+				<img src="/Tram.png" alt="Tram - TW07" className="imgTrain" />
 				</div>
 			</div>
 			</div>

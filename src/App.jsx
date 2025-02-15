@@ -7,6 +7,7 @@ import Matches from "./pages/Matches";
 import Game from "./pages/Game"; // nouvelle page pour le jeu
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import NotFound from "./pages/404";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </Router>

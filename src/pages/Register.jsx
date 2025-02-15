@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Form from "./../components/Form";
+import animateTrain from "../components/trainAnimation";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -31,8 +32,9 @@ const Register = () => {
     } catch (err) {
       // Vérification de l'erreur retournée
       if (err.response) {
+        console.log(err);
         // Erreur côté serveur
-        setError(`Erreur: ${err.response.data.message || 'Veuillez réessayer.'}`);
+        setError(`Erreur: ${err.response.data.error || 'Veuillez réessayer.'}`);
       } else {
         // Erreur côté client
         setError("Erreur réseau ou problème avec l'API. Veuillez réessayer.");
@@ -67,6 +69,8 @@ const Register = () => {
         </div>
       
       </div>
+
+      <div className="w-full">{animateTrain("Metro", "right-to-left")}</div>
     </>
   );
 };

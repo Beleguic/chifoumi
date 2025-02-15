@@ -185,13 +185,13 @@ export default function MatchGame() {
       };
     }
   }, [matchId, authId, fetchMatch, subscribeToMatch]);
-
+  
   if (!match && !error) {
-    return <div>Chargement ..., Veuillez patienter</div>;
+    return <div className="text-center h-200 content-center"><p>Chargement ..., Veuillez patienter</p></div>;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <div className="text-center h-200 content-center"><p className="text-red-500 text-center mt-4">{error}</p></div>;
   }
 
   if (!match) {

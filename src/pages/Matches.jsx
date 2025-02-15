@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { gameState } from "../data/data.js";
+import animateTrain from "../components/trainAnimation";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -133,6 +134,8 @@ export default function MatchList() {
       </table>
 
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+
+	  <div className="w-full">{animateTrain("RER", "left-to-right")}</div>
     </div>
   );
 }

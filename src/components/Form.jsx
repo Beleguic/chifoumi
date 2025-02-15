@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import Input from "./Input";
 
 const Form = ({ title, fields, onSubmit, submitLabel, className, otherAction }) => {
@@ -18,9 +18,7 @@ const Form = ({ title, fields, onSubmit, submitLabel, className, otherAction }) 
           />
         ))}
         <div className="buttonContainer">
-          <button
-            type="submit"
-          >
+          <button type="submit">
             {submitLabel}
           </button>
           {otherAction}
@@ -28,6 +26,31 @@ const Form = ({ title, fields, onSubmit, submitLabel, className, otherAction }) 
       </form>
     </div>
   );
+};
+
+// ✅ Add PropTypes validation
+Form.propTypes = {
+  title: PropTypes.string.isRequired,
+  fields: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      type: PropTypes.string,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      onChange: PropTypes.func.isRequired,
+      required: PropTypes.bool,
+      placeholder: PropTypes.string,
+    })
+  ).isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  submitLabel: PropTypes.string.isRequired,
+  className: PropTypes.string,
+  otherAction: PropTypes.node,
+};
+
+Form.defaultProps = {
+  className: "",
+  otherAction: null,
 };
 
 export default Form;

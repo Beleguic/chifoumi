@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Form from "./../components/Form";
 import { useAuth } from "../contexts/AuthContext";
+import animateTrain from "../components/trainAnimation";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -40,7 +41,7 @@ const Login = () => {
 		  }
 		} catch (err) {
 		  if (err.response) {
-			setError(`Erreur: ${err.response.data.message || 'Vérifiez vos identifiants et réessayez.'}`);
+			setError(`Erreur: ${err.response.data.error || 'Vérifiez vos identifiants et réessayez.'}`);
 		  } else {
 			setError("Erreur réseau ou problème avec l'API. Veuillez réessayer.");
 		  }
@@ -86,6 +87,8 @@ const Login = () => {
 			{error && <p className="text-red-500 text-center mt-4">{error}</p>}
 			</div>
 		</div>
+
+		<div className="w-full">{animateTrain("RER", "left-to-right")}</div>
 		</>
 	);
   };
