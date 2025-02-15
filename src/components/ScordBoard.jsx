@@ -6,7 +6,7 @@ export default function ScoreBoard({ match, playerNumber }) {
     <aside className="flex flex-col whitespace-nowrap min-w-sm">
       <header className={"bg-teal-500 px-4 py-8 rounded-t-md"}>
         <h2 className={"text-2xl font-semibold"}>{ playerNumber === 1 ? match.user1.username : match.user2.username }</h2>
-        <p className={`${playerNumber === 1 ? 'text-blue-500' : 'text-red-500'} font-normal text-xl` }> joueur {playerNumber}</p>
+        <p className={`${playerNumber === 1 ? 'text-blue-500' : 'text-red-500'} font-normal text-xl` }> Joueur {playerNumber}</p>
       </header>
       <table>
         <thead>

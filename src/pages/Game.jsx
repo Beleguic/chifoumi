@@ -6,6 +6,7 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import {gameState, getTransportEquivalent} from "../data/data.js";
 import ScoreBoard from "../components/ScordBoard.jsx";
 import RoundStepper from "../components/RoundStepper.jsx";
+import Animation from "../components/animation.jsx";
 
 export default function MatchGame() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -103,9 +104,9 @@ export default function MatchGame() {
     if(!winner)
       return (
         <nav className={"flex justify-evenly items-center w-full"}>
-          <button onClick={() => submitMove(getTransportEquivalent("RER"))} disabled={ moveDisabled }>RER</button>
-          <button onClick={() => submitMove(getTransportEquivalent("Metro"))} disabled={ moveDisabled }>Metro</button>
-          <button onClick={() => submitMove(getTransportEquivalent("Tram"))} disabled={ moveDisabled }>Tram</button>
+          <button onClick={() => submitMove(getTransportEquivalent("RER"))} disabled={ moveDisabled } className="backRER cursor-pointer text-white disabled:opacity-80 disabled:cursor-not-allowed"><span className="spanButton">RER</span></button>
+          <button onClick={() => submitMove(getTransportEquivalent("Metro"))} disabled={ moveDisabled } className="backMetro cursor-pointer text-white disabled:opacity-80 disabled:cursor-not-allowed"><span className="spanButton">Metro</span></button>
+          <button onClick={() => submitMove(getTransportEquivalent("Tram"))} disabled={ moveDisabled } className="backTram cursor-pointer text-white disabled:opacity-80 disabled:cursor-not-allowed"><span className="spanButton">Tram</span></button>
         </nav>
       )
   }
@@ -217,6 +218,9 @@ export default function MatchGame() {
           </div>
         </div>
         <ScoreBoard match={match} playerNumber={playerNumber.current} turn={turn}></ScoreBoard>
+      </div>
+      <div>
+        <Animation match={match} turn={turn}></Animation>
       </div>
     </>
   );

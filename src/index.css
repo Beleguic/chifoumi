@@ -156,6 +156,53 @@ header img{
 	color: white;
 
 }
+
+.imgTrain{
+
+	height: 45px;
+
+}
+
+.trainLeft{
+
+	left: -45em;
+
+}
+
+.trainRight{
+
+	right: -45em;
+
+}
+
+.backRER{
+
+	background-image: url("/public/RER.jpg");
+	background-size: contain;
+
+}
+
+.backMetro{
+
+	background-image: url("/public/Metro.jpg");
+	background-size: contain;
+
+}
+
+.backTram{
+
+	background-image: url("/public/Tram.jpg");
+	background-size: contain;
+
+}
+
+.spanButton{
+
+	background-color: rgba(0,0,0, 0.8);
+	padding: 5px;
+	border-radius: 5px;
+
+}
 /* game */
 .gameboard {
 	background-image: url("/tuiles.jpg");
