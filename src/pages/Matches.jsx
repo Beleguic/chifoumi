@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {gameState} from "../data/data.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -87,7 +88,7 @@ export default function MatchList() {
 				  winnerLabel = match.winner.username;
 				} else {
 				  if (allTurnsPlayed) {
-					winnerLabel = "Égalité";
+					winnerLabel = gameState.DRAW;
 				  } else {
 					winnerLabel = "En cours";
 				  }
@@ -98,13 +99,13 @@ export default function MatchList() {
                 	<td className="p-2">{match._id}</td>
                 	<td className="p-2">{match.user1?.username || "En attente"}</td>
                 	<td className="p-2">{match.user2?.username || "En attente"}</td>
-                	<td className="p-2">{winnerLabel}</td>
+                	<td className="p-2">{winnerLabel === gameState.DRAW ? "Égalité" : winnerLabel}</td>
                 	<td className="p-2">
                 	  <button
                 	    onClick={() => navigate(`/game/${match._id}`)}
                 	    className="px-4 py-2 text-white bg-green-500 rounded"
                 	  >
-                	    Jouer
+											{ match.winner || winnerLabel === gameState.DRAW ? "Voir" : "Jouer"}
                 	  </button>
                 	</td>
               	</tr>

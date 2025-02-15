@@ -3,7 +3,9 @@ import {useEffect, useState, useCallback, useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
-import {gameState} from "../data/data.js";
+import {gameState, getTransportEquivalent} from "../data/data.js";
+import ScoreBoard from "../components/ScordBoard.jsx";
+import RoundStepper from "../components/RoundStepper.jsx";
 
 export default function MatchGame() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -18,7 +20,7 @@ export default function MatchGame() {
   const [moveDisabled, setMoveDisabled] = useState(false);
   const [winner, setWinner] = useState(null);
 
-  const userNumber = useRef(1)
+  const playerNumber = useRef(1)
 
 	const fetchMatch = useCallback(async () => {
 		try {
@@ -30,7 +32,7 @@ export default function MatchGame() {
 
 			setMatch(response.data);
       console.log("match data set : ", response.data);
-      userNumber.current = response.data.user1._id === authId ? 1 : 2;
+      playerNumber.current = response.data.user1._id === authId ? 1 : 2;
 			let newTurn = getNextTurnId(response.data);
 			console.log(newTurn);
 			setTurn(newTurn);
@@ -51,7 +53,7 @@ export default function MatchGame() {
 		}
 		const lastTurn = match.turns[nbTurns - 1];
 		if (!isTurnFullyPlayed(lastTurn)) {
-      if(Object.keys(lastTurn).includes(`user${userNumber.current}`))
+      if(Object.keys(lastTurn).includes(`user${playerNumber.current}`))
         setMoveDisabled(true);
       else
         setMoveDisabled(false);
@@ -69,30 +71,30 @@ export default function MatchGame() {
 	}
 
   const getWinner = (match) => {
-    const user1WinCount = match.turns.filter((turn) => turn.winner === match.user1._id).length;
-    const user2WinCount = match.turns.filter((turn) => turn.winner === match.user2._id).length;
+    const user1WinCount = match.turns.filter((turn) => turn.winner === 'user1').length;
+    const user2WinCount = match.turns.filter((turn) => turn.winner === 'user2').length;
 
-    return user1WinCount > user2WinCount ? match.user1.username : user2WinCount > user1WinCount ? match.user2.username : "draw";
+    return user1WinCount > user2WinCount ? "1" : user2WinCount > user1WinCount ? "2" : "draw";
   }
 
   function Winner() {
     if(!winner)
       return (
-        <div>
-          <h1>Match en cours</h1>
-        </div>
+        <>
+          <h1 className="text-3xl">Match en cours</h1>
+        </>
       )
     if(winner === gameState.DRAW)
       return (
-        <div>
-          <h1>Match terminé</h1>
-          <h2>Match nul</h2>
-        </div>
+        <>
+          <h1 className="text-6xl">Match terminé</h1>
+          <h2 className="text-3xl">Match nul</h2>
+        </>
       )
     return (
       <div>
         <h1>Match terminé</h1>
-        <h2>Le vainqueur est {winner}</h2>
+        <h2>Vous avez { winner === playerNumber.current.toString() ?  "gagné" : "perdu" }</h2>
       </div>
     );
   }
@@ -100,7 +102,7 @@ export default function MatchGame() {
   function Buttons() {
     if(!winner)
       return (
-        <nav>
+        <nav className={"flex justify-evenly items-center w-full"}>
           <button onClick={() => submitMove(getTransportEquivalent("RER"))} disabled={ moveDisabled }>RER</button>
           <button onClick={() => submitMove(getTransportEquivalent("Metro"))} disabled={ moveDisabled }>Metro</button>
           <button onClick={() => submitMove(getTransportEquivalent("Tram"))} disabled={ moveDisabled }>Tram</button>
@@ -135,20 +137,6 @@ export default function MatchGame() {
     },
     [fetchMatch]
   );
-
-  const getTransportEquivalent = (choice) => {
-    const equivalents = {
-      rock: "RER",
-      paper: "Metro",
-      scissors: "Tram",
-    };
-
-    const reverseEquivalents = Object.fromEntries(
-      Object.entries(equivalents).map(([key, value]) => [value, key])
-    );
-
-    return equivalents.hasOwnProperty(choice) ? equivalents[choice] : reverseEquivalents[choice] || "Inconnu";
-  };
 
   const submitMove = async (move) => {
     try {
@@ -218,34 +206,18 @@ export default function MatchGame() {
 
   return (
     <>
-      <Winner></Winner>
-      <div className="flex flex-col items-center">
+      <div className={"flex mx-auto w-xl gap-8 my-12"}>
         <div>
-          <h2> Vous êtes le joueur { userNumber.current === 1 ? '1 : ' + match.user1.username : '2 : ' + match.user2.username }</h2>
-          <h3> Tour n°{turn}</h3>
-          <Buttons></Buttons>
+          <RoundStepper match={match} turn={turn} maxTurns={3} playerNumber={playerNumber.current}></RoundStepper>
+          <div className={"text-center my-12"}>
+            <Winner></Winner>
+          </div>
+          <div className={"gameboard"}>
+            <Buttons></Buttons>
+          </div>
         </div>
+        <ScoreBoard match={match} playerNumber={playerNumber.current} turn={turn}></ScoreBoard>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Turn</th>
-            <th>Joueur 1</th>
-            <th>Joueur 2</th>
-            <th>Winner</th>
-          </tr>
-        </thead>
-        <tbody>
-          {match.turns.map((turn, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{getTransportEquivalent(turn.user1) || "En attente"}</td>
-              <td>{getTransportEquivalent(turn.user2) || "En attente"}</td>
-              <td>{turn.winner === gameState.DRAW ? "Égalité" : match[turn.winner]?.username || "En attente"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </>
   );
 }
